@@ -57,37 +57,24 @@ void loop() {
   Serial.println("---------------------------");
   //---------------------MQ---------------------------
 //---------------------pressue---------------------------
-// Read raw values
-  uint32_t rawTemp = ms5611.readRawTemperature();
-  uint32_t rawPressure = ms5611.readRawPressure();
-
   // Read true temperature & Pressure
   double realTemperature = ms5611.readTemperature();
   long realPressure = ms5611.readPressure();
 
-  // Calculate altitude
-  float absoluteAltitude = ms5611.getAltitude(realPressure);
-  float relativeAltitude = ms5611.getAltitude(realPressure, referencePressure);
-
   Serial.println("--");
 
-  Serial.print(" rawTemp = ");
-  Serial.print(rawTemp);
-  Serial.print(", realTemp = ");
+  Serial.print("realTemp = ");
   Serial.print(realTemperature);
   Serial.println(" *C");
 
-  Serial.print(" rawPressure = ");
-  Serial.print(rawPressure);
-  Serial.print(", realPressure = ");
+  Serial.print("realPressure = ");
   Serial.print(realPressure);
   Serial.println(" Pa");
-
-  Serial.print(" absoluteAltitude = ");
-  Serial.print(absoluteAltitude);
-  Serial.print(" m, relativeAltitude = ");
-  Serial.print(relativeAltitude);    
-  Serial.println(" m");
+  
+  Serial.print("realPressure = ");
+  Serial.print(realPressure/133);
+  Serial.println(" mmHg Art.");
+  
 //---------------------pressue---------------------------
 //---------------------CO2---------------------------
   Serial1.write(cmd, 9);
@@ -110,4 +97,4 @@ void loop() {
   }
 //---------------------CO2---------------------------
   delay(1000);
-  }
+}
