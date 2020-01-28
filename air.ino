@@ -6,6 +6,10 @@
 #include <SPI.h>
 #include <SD.h>
 #include <OneWire.h>
+#include "DHT.h"
+
+#define DHTPIN 4   
+#define DHTTYPE DHT11   // DHT 11
 
 OneWire ds(6);
 
@@ -27,8 +31,10 @@ MS5611 ms5611;
 
 byte cmd[9] = {0xFF,0x01,0x86,0x00,0x00,0x00,0x00,0x00,0x79}; 
 unsigned char response[9];
-int error = 0;//1 - card, 2 - barometer, 3 - time SetTime, 4 - time circuitry, 5 - CO2, 6 - open log file
+int error = 0;//1 - card, 2 - barometer, 3 - time SetTime, 4 - time circuitry, 5 - CO2, 6 - open log file, 7 - humid 
 
+
+DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
   Serial.begin(9600);  
@@ -36,13 +42,13 @@ void setup() {
   while (!Serial) ; // wait for serial
   while (!Serial1) ; // wait for serial
   
-  Serial.println("Serial ok");
-  Serial1.println("Serial1 ok");
+  //Serial.println("Serial ok");
+  //Serial1.println("Serial1 ok");
    
   if (!SD.begin(chipSelect)) {
-    Serial.println("Card failed, or not present");
+    //Serial.println("Card failed, or not present");
     error = 1;
-    showAlarm();
+    //showAlarm();!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 
   while(!ms5611.begin())
@@ -52,17 +58,23 @@ void setup() {
     showAlarm();
     //delay(500);
   }
+  //Serial.println("ms5611 ok!");
   //referencePressure = ms5611.readPressure();
   //ms5611.getOversampling();
+
+  dht.begin();  
+  //Serial.println("dht ok!");
+  
 }
 
 void showAlarm() {
-
-  while (1);
+  Serial.println("ERROR:");
+  Serial.println(error);
+  //while (1);
 }
 
 void loop() {
-  String dataString = "";//TIME;MQ2;MQ135;MQ7;pressue;temp1;CO2;temp2
+  String dataString = "";//TIME;MQ2;MQ135;MQ7;pressue;temp1;CO2;temp2;humid;temp3;
 
   //---------------------TIME---------------------------
 
@@ -145,6 +157,23 @@ void loop() {
 
 //---------------------TEMP2---------------------------
 
+//---------------------HUMID---------------------------
+
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+
+  if (isnan(h) || isnan(t)) {
+    //Serial.println(F("Failed to read from DHT sensor!"));
+    
+    error = 7;
+    showAlarm();
+    //return;
+  }
+
+  dataString += String(h) + ";" + String(t) + ";";
+//---------------------HUMID---------------------------
+  Serial.println(dataString);
+  
 //---------------------CD CARD---------------------------
   
   File dataFile = SD.open("datalog.txt", FILE_WRITE);
@@ -153,15 +182,15 @@ void loop() {
     dataFile.println(dataString);
     dataFile.close();
 
-    Serial.println(dataString);
+    //Serial.println(dataString);
   }
   else {
     error = 6;
     showAlarm();
-    Serial.println("error opening datalog.txt");
+    //Serial.println("error opening datalog.txt");
   }
 
 //---------------------CD CARD---------------------------
-  Serial.println(dataString);
+
   delay(10000);
 }
