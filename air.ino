@@ -36,11 +36,31 @@ int error = 0;//1 - card, 2 - barometer, 3 - time SetTime, 4 - time circuitry, 5
 
 DHT dht(DHTPIN, DHTTYPE);
 
+
+//SoftwareSerial mySerial(9, 8); // RX, TX
+#define pwmPin 13
+
+
+int readCO2PWM() {
+  unsigned long th, tl, ppm_pwm = 0;
+  do {
+    th = pulseIn(pwmPin, HIGH, 1004000) / 1000;
+    tl = 1004 - th;
+    ppm_pwm = 5000 * (th-2)/(th+tl-4);
+  } while (th == 0);
+  //Serial.print("PPM PWM: ");
+  //Serial.println(ppm_pwm);
+  return ppm_pwm; 
+}
+  
+
 void setup() {
   Serial.begin(9600);  
   Serial1.begin(9600);
   while (!Serial) ; // wait for serial
   while (!Serial1) ; // wait for serial
+
+  pinMode(pwmPin, INPUT);
   
   //Serial.println("Serial ok");
   //Serial1.println("Serial1 ok");
@@ -113,7 +133,7 @@ void loop() {
   
 //---------------------pressue---------------------------
 //---------------------CO2---------------------------
-  Serial1.write(cmd, 9);
+  /*Serial1.write(cmd, 9);
   memset(response, 0, 9);
   Serial1.readBytes(response, 9);
   int i;
@@ -133,7 +153,9 @@ void loop() {
     unsigned int ppm = (256*responseHigh) + responseLow;
     //Serial.println("CO2: " + String(ppm) + " ppm");
     dataString += String(ppm) + ";";
-  }
+  }*/
+
+  dataString += String(readCO2PWM()) + "!!!;";
 //---------------------CO2---------------------------
 
 //---------------------TEMP2---------------------------
