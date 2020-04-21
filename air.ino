@@ -1,16 +1,13 @@
-#include <Wire.h>
+//#include <Wire.h>
 #include <MS5611.h>
-#include <SoftwareSerial.h>
+//#include <SoftwareSerial.h>
 #include <TimeLib.h>
 #include <DS1307RTC.h>
-#include <SPI.h>
+//#include <SPI.h>
 #include <SD.h>
 #include <OneWire.h>
 #include "DHT.h"
 #include <TroykaMQ.h>
-
-#define DHTPIN 4   
-#define DHTTYPE DHT11   // DHT 11
 
 OneWire ds(6);
 
@@ -20,7 +17,7 @@ MQ2 mq2(A0);
 MQ7 mq7(A2);
 MQ135 mq135(A1);
 
-long mq7Value = 0;
+unsigned long mq7Value = 0;
 
 MS5611 ms5611;
 //double referencePressure;
@@ -30,26 +27,27 @@ byte cmd[9] = { 0xFF,0x01,0x86,0x00,0x00,0x00,0x00,0x00,0x79 };
 unsigned char response[9];
 int error = 0;//1 - card, 2 - barometer, 3 - time SetTime, 4 - time circuitry, 5 - CO2, 6 - open log file, 7 - humid 
 
+DHT dht(4, DHT11);
 
-DHT dht(DHTPIN, DHTTYPE);
 
-
-//SoftwareSerial mySerial(9, 8); // RX, TX
 #define pwmPin 13
 
 
-int readCO2PWM() {
-	unsigned long th, tl, ppm_pwm = 0;
+unsigned int readCO2PWM() {
+	unsigned long th, ppm_pwm = 0;
 	do {
-		th = pulseIn(pwmPin, HIGH, 1004000) / 1000;
-		tl = 1004 - th;
-		ppm_pwm = 5000 * (th - 2) / (th + tl - 4);
+		th = pulseIn(pwmPin, HIGH, 1004000) / 1000;		
+		ppm_pwm = 5000 * (th - 2) / (th + 1004 - th - 4);
 	} while (th == 0);
 	//Serial.print("PPM PWM: ");
 	//Serial.println(ppm_pwm);
 	return ppm_pwm;
 }
-
+void showAlarm() {
+	Serial.println("ERROR:");
+	Serial.println(error);
+	//while (1);
+}
 
 void setup() {
 	Serial.begin(9600);
@@ -58,9 +56,13 @@ void setup() {
 	while (!Serial1); // wait for serial
 
 
+	//---------------setTime--------------------------
+	//setTime(hr, min, sec, day, month, yr);	
+	//setTime(20, 25, 00, 21, 04, 2020);
+	//RTC.set(now());
 	//---------------mqCalibrate --------------------------
 	mq7.cycleHeat();
-	mq2.calibrate();
+	mq2.calibrate();//9.57
 	mq135.calibrate();
 	//---------------mqCalibrate --------------------------
 	pinMode(pwmPin, INPUT);
@@ -87,24 +89,21 @@ void setup() {
 
 	dht.begin();
 	//Serial.println("dht ok!");
-
 }
 
-void showAlarm() {
-	Serial.println("ERROR:");
-	Serial.println(error);
-	//while (1);
-}
+
 
 void loop() {
-	String dataString = "";//TIME;LPG;Methane;Smoke;Hydrogen;CO2;CarbonMonoxide;pressue;temp1;CO2;temp2;humid;temp3;
-
+	//String dataString = "";//TIME;LPG;Methane;Smoke;Hydrogen;CO2;CarbonMonoxide;pressue;temp1;CO2;temp2;humid;temp3;
+	char resultData[100];
 	//---------------------TIME---------------------------
 
 	tmElements_t tm;
 	if (RTC.read(tm)) {
-		dataString = String(tm.Hour) + ":" + String(tm.Minute) + ":" + String(tm.Second) + " " +
-			String(tm.Day) + "/" + String(tm.Month) + "/" + String(tmYearToCalendar(tm.Year)) + ";";
+		/*dataString = String(tm.Hour) + ":" + String(tm.Minute) + ":" + String(tm.Second) + " " +
+			String(tm.Day) + "/" + String(tm.Month) + "/" + String(tmYearToCalendar(tm.Year)) + ";";*/
+		sprintf(resultData, "%u:%u:%u %u/%u/%u;", tm.Hour, tm.Minute, tm.Second, tm.Day, tm.Month, tmYearToCalendar(tm.Year));
+		//Serial.println(resultData);
 	}
 	else {
 
@@ -134,16 +133,20 @@ void loop() {
 		mq7.cycleHeat();
 	}
 	
-	dataString += String(mq2.readLPG()) + ";" + String(mq2.readMethane()) + ";" + String(mq2.readSmoke()) + ";" + String(mq2.readHydrogen()) + "" +
-		";" + String(mq135.readCO2()) + ";" + String(mq7Value) + ";";
+	/*dataString += String(mq2.readLPG()) + ";" + String(mq2.readMethane()) + ";" + String(mq2.readSmoke()) + ";" + String(mq2.readHydrogen()) + "" +
+		";" + String(mq135.readCO2()) + ";" + String(mq7Value) + ";";*/
+
+	sprintf(resultData + strlen(resultData), "%6ld;%6ld;%6ld;%6ld;%6ld;%6ld;",
+		mq2.readLPG(), mq2.readMethane(), mq2.readSmoke(), mq2.readHydrogen(), mq135.readCO2(), mq7Value);
 	//---------------------MQ---------------------------
 	
 	//---------------------pressue---------------------------
 	// Read true temperature & Pressure
-	double realTemperature = ms5611.readTemperature();
+	//double realTemperature = ms5611.readTemperature();
 	long realPressure = ms5611.readPressure();
 
-	dataString += String(realPressure / 133) + ";" + String(realTemperature) + ";";
+	//dataString += String(realPressure / 133) + ";" + String(realTemperature) + ";";
+	sprintf(resultData + strlen(resultData), "%6ld;%6ld;", (realPressure / 133), long(ms5611.readTemperature()));
 
 	//---------------------pressue---------------------------
 	//---------------------CO2---------------------------
@@ -169,13 +172,14 @@ void loop() {
 		dataString += String(ppm) + ";";
 	  }*/
 
-	dataString += String(readCO2PWM()) + "!!!;";
+	//dataString += String(readCO2PWM()) + ";";
+	sprintf(resultData + strlen(resultData), "%d;", readCO2PWM());
 	//---------------------CO2---------------------------
 
 	//---------------------TEMP2---------------------------
-	byte data[2]; // Место для значения температуры
+	byte data[2];
 
-	ds.reset(); // Начинаем взаимодействие со сброса всех предыдущих команд и параметров
+	ds.reset();
 	ds.write(0xCC); // Даем датчику DS18b20 команду пропустить поиск по адресу. В нашем случае только одно устрйоство 
 	ds.write(0x44); // Даем датчику DS18b20 команду измерить температуру. Само значение температуры мы еще не получаем - датчик его положит во внутреннюю память
 
@@ -185,10 +189,11 @@ void loop() {
 	ds.write(0xCC);
 	ds.write(0xBE); // Просим передать нам значение регистров со значением температуры
 	// Получаем и считываем ответ
-	data[0] = ds.read(); // Читаем младший байт значения температуры
-	data[1] = ds.read();
-	float temperature = ((data[1] << 8) | data[0]) * 0.0625;
-	dataString += String(temperature) + ";";
+	resultData[0] = ds.read(); // Читаем младший байт значения температуры
+	resultData[1] = ds.read();
+	float temperature = ((resultData[1] << 8) | resultData[0]) * 0.0625;
+	//dataString += String(temperature) + ";";
+	sprintf(resultData + strlen(resultData), "%f;", temperature);
 
 
 	//---------------------TEMP2---------------------------
@@ -206,16 +211,17 @@ void loop() {
 		//return;
 	}
 
-	dataString += String(h) + ";" + String(t) + ";";
+	//dataString += String(h) + ";" + String(t) + ";";
+	sprintf(resultData + strlen(resultData), "%f;%f", h, t);
 	//---------------------HUMID---------------------------
-	Serial.println(dataString);
+	Serial.println(resultData);
 
 	//---------------------CD CARD---------------------------
 
 	File dataFile = SD.open("datalog.txt", FILE_WRITE);
 
 	if (dataFile) {
-		dataFile.println(dataString);
+		dataFile.println(resultData);
 		dataFile.close();
 
 		//Serial.println(dataString);
