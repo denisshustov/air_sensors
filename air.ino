@@ -36,7 +36,7 @@ DHT dht(4, DHT11);
 unsigned int readCO2PWM() {
 	unsigned long th, ppm_pwm = 0;
 	do {
-		th = pulseIn(pwmPin, HIGH, 1004000) / 1000;		
+		th = pulseIn(pwmPin, HIGH, 1004000) / 1000;
 		ppm_pwm = 5000 * (th - 2) / (th + 1004 - th - 4);
 	} while (th == 0);
 	//Serial.print("PPM PWM: ");
@@ -132,21 +132,38 @@ void loop() {
 		delay(100);
 		mq7.cycleHeat();
 	}
-	
+
 	/*dataString += String(mq2.readLPG()) + ";" + String(mq2.readMethane()) + ";" + String(mq2.readSmoke()) + ";" + String(mq2.readHydrogen()) + "" +
 		";" + String(mq135.readCO2()) + ";" + String(mq7Value) + ";";*/
 
-	sprintf(resultData + strlen(resultData), "%6ld;%6ld;%6ld;%6ld;%6ld;%6ld;",
-		mq2.readLPG(), mq2.readMethane(), mq2.readSmoke(), mq2.readHydrogen(), mq135.readCO2(), mq7Value);
+		/*sprintf(resultData + strlen(resultData), "%6ld;%6ld;%6ld;%6ld;%6ld;%6ld;",
+			mq2.readLPG(), mq2.readMethane(), mq2.readSmoke(), mq2.readHydrogen(), mq135.readCO2(), mq7Value);*/
+	dtostrf(mq2.readLPG(), 4, 2, &resultData[strlen(resultData)]);
+	strcat(resultData, ";");
+	dtostrf(mq2.readMethane(), 4, 2, &resultData[strlen(resultData)]);
+	strcat(resultData, ";");
+	dtostrf(mq2.readSmoke(), 4, 2, &resultData[strlen(resultData)]);
+	strcat(resultData, ";");
+	dtostrf(mq2.readHydrogen(), 4, 2, &resultData[strlen(resultData)]);
+	strcat(resultData, ";");
+	dtostrf(mq135.readCO2(), 4, 2, &resultData[strlen(resultData)]);
+	strcat(resultData, ";");
+	dtostrf(mq7Value, 4, 2, &resultData[strlen(resultData)]);
+	strcat(resultData, ";");
+
 	//---------------------MQ---------------------------
-	
+
 	//---------------------pressue---------------------------
 	// Read true temperature & Pressure
 	//double realTemperature = ms5611.readTemperature();
 	long realPressure = ms5611.readPressure();
 
 	//dataString += String(realPressure / 133) + ";" + String(realTemperature) + ";";
-	sprintf(resultData + strlen(resultData), "%6ld;%6ld;", (realPressure / 133), long(ms5611.readTemperature()));
+	//sprintf(resultData + strlen(resultData), "%6ld;%6ld;", (realPressure / 133), long(ms5611.readTemperature()));
+	dtostrf((realPressure / 133), 4, 2, &resultData[strlen(resultData)]);
+	strcat(resultData, ";");
+	dtostrf(ms5611.readTemperature(), 4, 2, &resultData[strlen(resultData)]);
+	strcat(resultData, ";");
 
 	//---------------------pressue---------------------------
 	//---------------------CO2---------------------------
@@ -172,8 +189,10 @@ void loop() {
 		dataString += String(ppm) + ";";
 	  }*/
 
-	//dataString += String(readCO2PWM()) + ";";
-	sprintf(resultData + strlen(resultData), "%d;", readCO2PWM());
+	  //dataString += String(readCO2PWM()) + ";";
+	  //sprintf(resultData + strlen(resultData), "%d;", readCO2PWM());
+	dtostrf(readCO2PWM(), 4, 2, &resultData[strlen(resultData)]);
+	strcat(resultData, ";");
 	//---------------------CO2---------------------------
 
 	//---------------------TEMP2---------------------------
@@ -191,10 +210,9 @@ void loop() {
 	// Получаем и считываем ответ
 	resultData[0] = ds.read(); // Читаем младший байт значения температуры
 	resultData[1] = ds.read();
-	float temperature = ((resultData[1] << 8) | resultData[0]) * 0.0625;
-	//dataString += String(temperature) + ";";
-	sprintf(resultData + strlen(resultData), "%f;", temperature);
 
+	dtostrf(((resultData[1] << 8) | resultData[0]) * 0.0625, 2, 2, &resultData[strlen(resultData)]);
+	strcat(resultData, ";");
 
 	//---------------------TEMP2---------------------------
 
@@ -212,7 +230,12 @@ void loop() {
 	}
 
 	//dataString += String(h) + ";" + String(t) + ";";
-	sprintf(resultData + strlen(resultData), "%f;%f", h, t);
+	//sprintf(resultData + strlen(resultData), "%f;%f", h, t);
+
+	dtostrf(h, 4, 2, &resultData[strlen(resultData)]);
+	strcat(resultData, ";");
+	dtostrf(t, 4, 2, &resultData[strlen(resultData)]);
+	strcat(resultData, ";");
 	//---------------------HUMID---------------------------
 	Serial.println(resultData);
 
