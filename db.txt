@@ -1,0 +1,37 @@
+sudo apt update
+sudo apt upgrade
+sudo apt install mariadb-server
+sudo mysql_secure_installation
+sudo mysql -uroot -p
+sudo mysql -uroot -p
+CREATE DATABASE <dbname>;
+CREATE USER '<username>'@'localhost' IDENTIFIED BY '<password>';
+GRANT ALL PRIVILEGES ON <dbname>.* TO '<username>'@'localhost';
+FLUSH PRIVILEGES;
+sudo mysql -u pi_user -p data
+
+pip install MySQL-python
+
+CREATE TABLE data (
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ms5611_temp DECIMAL(18,9) NULL, 
+    ms5611_pressue DECIMAL(18,9) NULL, 
+    mhz19_co2 DECIMAL(18,9) NULL,
+    mhz19_temp DECIMAL(18,9) NULL,
+    ds18b20_temp DECIMAL(18,9) NULL);
+
+ """
+        INSERT INTO data
+        (ms5611_temp,
+     ms5611_pressue,
+     mhz19_co2,
+     mhz19_temp,
+     ds18b20_temp)
+        VALUES
+        (123.123,
+     234.234,
+     987.665,
+     111.222,
+     900.222)
+        """
