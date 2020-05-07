@@ -90,7 +90,6 @@ def write_to_db(data):
 		x.close()
 		conn.close()
 	
-mh_z19.abc_on()
 
 while True:
     sensorMS5611.read()
