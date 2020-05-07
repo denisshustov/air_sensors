@@ -1,0 +1,28 @@
+#sudo touch /lib/systemd/system/measure.service
+#sudo nano /lib/systemd/system/measure.service
+
+{
+	echo '[Unit]'
+	echo 'Description=measure service on boot up'
+	echo 'After=multi-user.target'
+	echo ''
+	echo '[Service]'
+	echo 'Type=idle'
+	echo 'ExecStart=/usr/bin/python /home/pi/measure/run_measure.py'
+	echo 'StandardOutput=syslog'
+	echo 'StandardError=syslog'
+	echo 'SyslogIdentifier=ServiceScript'
+	echo ''
+	echo '[Install]'
+	echo 'WantedBy=multi-user.target'
+} > /lib/systemd/system/measure.service
+#--------------------content--------------------
+
+sudo chmod 644 /lib/systemd/system/measure.service
+sudo systemctl daemon-reload
+sudo systemctl enable measure.service
+
+echo 'if $programname=='measure' then /home/ubuntu/logs/measure.log & stop' > /etc/rsyslog.d/measure.conf
+
+sudo systemctl restart rsyslog
+sudo systemctl start measure.service
