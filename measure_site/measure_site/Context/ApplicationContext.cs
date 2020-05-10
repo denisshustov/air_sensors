@@ -9,13 +9,14 @@ namespace Core.Context
     {
         public DbSet<Data> Data { get; set; }
 
-        public ApplicationContext()
+        public ApplicationContext(DbContextOptions<ApplicationContext> options)
+            : base(options)
         {
             Database.EnsureCreated();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySql("server=localhost;UserId=root;Password=password;database=usersdb3;");
+            //optionsBuilder.UseMySql("server=localhost;UserId=root;Password=password;database=usersdb3;");
         }
     }
 }
