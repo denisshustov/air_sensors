@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace measure_site.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class DataController : Controller
     {
         private readonly ILogger<DataController> _logger;
@@ -24,13 +24,13 @@ namespace measure_site.Controllers
             _logger = logger;
         }
 
-        [HttpGet("/")]
+        [HttpGet("data")]
         public async Task<IEnumerable<Data>> GetAsync()
         {
             return await _context.Data.ToListAsync();
         }
 
-        [HttpGet("GetByDateAsync")]
+        [HttpGet("dataByDate")]
         public async Task<IEnumerable<Data>> GetByDateAsync(DateTime from, DateTime to)
         {
             //from = new DateTime(from.Year, from.Month, from.Day);

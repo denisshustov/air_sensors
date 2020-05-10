@@ -18,5 +18,9 @@ namespace Core.Context
         {
             //optionsBuilder.UseMySql("server=localhost;UserId=root;Password=password;database=usersdb3;");
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Data>().ToTable("data");
+        }
     }
 }
