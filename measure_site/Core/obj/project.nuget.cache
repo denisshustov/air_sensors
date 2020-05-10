@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "1Vgl5gtsEtk/EMrpDqtPlL+3083dEAPZmUjo9rm3I12p2oU7TsTod9ckL/LsUp/OVRPWAiuVTNL2X0rDef5WtA==",
+  "dgSpecHash": "xxHsiL+eQgoQ9cIY0ixban2BQ8a3azfRbz6EyGQjeJkEsG3qnFIJfU+PmI/JAw8F0B/tTRF/mdfNs1zV45ZO0w==",
   "success": true,
-  "projectFilePath": "g:\\Projects\\measure\\measure_site\\Core\\Core.csproj",
+  "projectFilePath": "G:\\Projects\\measure\\air_sensors\\measure_site\\Core\\Core.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mnogo\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.0\\microsoft.bcl.asyncinterfaces.1.1.0.nupkg.sha512",
     "C:\\Users\\mnogo\\.nuget\\packages\\microsoft.bcl.hashcode\\1.1.0\\microsoft.bcl.hashcode.1.1.0.nupkg.sha512",

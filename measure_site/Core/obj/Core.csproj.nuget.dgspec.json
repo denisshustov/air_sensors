@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "g:\\Projects\\measure\\measure_site\\Core\\Core.csproj": {}
+    "G:\\Projects\\measure\\air_sensors\\measure_site\\Core\\Core.csproj": {}
   },
   "projects": {
-    "g:\\Projects\\measure\\measure_site\\Core\\Core.csproj": {
+    "G:\\Projects\\measure\\air_sensors\\measure_site\\Core\\Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "g:\\Projects\\measure\\measure_site\\Core\\Core.csproj",
+        "projectUniqueName": "G:\\Projects\\measure\\air_sensors\\measure_site\\Core\\Core.csproj",
         "projectName": "Core",
-        "projectPath": "g:\\Projects\\measure\\measure_site\\Core\\Core.csproj",
+        "projectPath": "G:\\Projects\\measure\\air_sensors\\measure_site\\Core\\Core.csproj",
         "packagesPath": "C:\\Users\\mnogo\\.nuget\\packages\\",
-        "outputPath": "g:\\Projects\\measure\\measure_site\\Core\\obj\\",
+        "outputPath": "G:\\Projects\\measure\\air_sensors\\measure_site\\Core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\mnogo\\AppData\\Roaming\\NuGet\\NuGet.Config",
