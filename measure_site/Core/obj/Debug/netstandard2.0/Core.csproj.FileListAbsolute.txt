@@ -1,0 +1,9 @@
+g:\Projects\measure\measure_site\Core\bin\Debug\netstandard2.0\Core.deps.json
+g:\Projects\measure\measure_site\Core\bin\Debug\netstandard2.0\Core.dll
+g:\Projects\measure\measure_site\Core\obj\Debug\netstandard2.0\Core.csprojAssemblyReference.cache
+g:\Projects\measure\measure_site\Core\obj\Debug\netstandard2.0\Core.AssemblyInfoInputs.cache
+g:\Projects\measure\measure_site\Core\obj\Debug\netstandard2.0\Core.AssemblyInfo.cs
+g:\Projects\measure\measure_site\Core\bin\Debug\netstandard2.0\Core.pdb
+g:\Projects\measure\measure_site\Core\obj\Debug\netstandard2.0\Core.csproj.CoreCompileInputs.cache
+g:\Projects\measure\measure_site\Core\obj\Debug\netstandard2.0\Core.dll
+g:\Projects\measure\measure_site\Core\obj\Debug\netstandard2.0\Core.pdb
