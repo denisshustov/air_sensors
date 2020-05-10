@@ -33,10 +33,25 @@ namespace measure_site.Controllers
         [HttpGet("dataByDate")]
         public async Task<IEnumerable<Data>> GetByDateAsync(DateTime from, DateTime to)
         {
-            //from = new DateTime(from.Year, from.Month, from.Day);
             return await _context.Data
                 .Where(d => d.time_stamp > from && d.time_stamp < to)
                 .ToListAsync();
+        }
+
+        [HttpGet("insertTestData")]
+        public async Task InsertTestData(DateTime from, DateTime to)
+        {
+            var lst = new List<Data>();
+            for (int i = 0; i < 1000; i++)
+            {
+                lst.Add(new Data()
+                {
+                    time_stamp = DateTime.Now,
+
+                });
+            }
+            //await _context.Data.AddAsync(new Data() { 
+            //});
         }
     }
 }
