@@ -39,19 +39,36 @@ namespace measure_site.Controllers
         }
 
         [HttpGet("insertTestData")]
-        public async Task InsertTestData(DateTime from, DateTime to)
+        public async Task<OkResult> InsertTestData(DateTime from, DateTime to)
         {
             var lst = new List<Data>();
+            var ds18b20_temp = 5M;
+            var ds18b20_temp_forward = true;
+            var r = new Random();
             for (int i = 0; i < 1000; i++)
             {
-                lst.Add(new Data()
+                var d = new Data()
                 {
-                    time_stamp = DateTime.Now,
-
-                });
+                    time_stamp = DateTime.Now.AddMinutes(i),
+                    ds18b20_temp = ds18b20_temp,
+                    mhz19_co2 = ds18b20_temp * r.Next(1, 10),
+                    mhz19_temp = ds18b20_temp - r.Next(1, 5),
+                    ms5611_pressue = ds18b20_temp - r.Next(1, 55),
+                    ms5611_temp = ds18b20_temp - r.Next(1, 5)
+                };
+                if (ds18b20_temp_forward)
+                    ds18b20_temp += 0.5M;
+                else
+                    ds18b20_temp -= 0.5M;
+                if (ds18b20_temp > 30)
+                    ds18b20_temp_forward = false;
+                if (ds18b20_temp <= 5)
+                    ds18b20_temp_forward = true;
+                await _context.Data.AddAsync(d);
             }
-            //await _context.Data.AddAsync(new Data() { 
-            //});
+            //await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }
