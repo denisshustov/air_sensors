@@ -35,6 +35,7 @@ namespace measure_site.Controllers
         {
             return await _context.Data
                 .Where(d => d.time_stamp > from && d.time_stamp < to)
+                //.Take(50)
                 .ToListAsync();
         }
 
