@@ -15,6 +15,10 @@ pip install MySQL-python
 CREATE TABLE data (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     time_stamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    mq7 INT NULL, 
+    mq135 INT NULL, 
+    mq3 INT NULL, 
+    mq8 INT NULL, 
     ms5611_temp DECIMAL(18,9) NULL, 
     ms5611_pressue DECIMAL(18,9) NULL, 
     mhz19_co2 DECIMAL(18,9) NULL,

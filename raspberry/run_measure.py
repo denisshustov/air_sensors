@@ -1,5 +1,6 @@
 import time
 import sys
+import serial
 
 
 from MS5611 import MS5611
@@ -22,6 +23,15 @@ verbose_mode = len(sys.argv) > 1 and sys.argv[1] == '-v'
 if verbose_mode:
 	print "Verbose mode ON!!!"
 #-----------------arguments--------------
+
+#-----------------arduino sensers--------------
+
+usbPort='/dev/ttyUSB0'
+ser = serial.Serial(usbPort, 9600)
+
+#-----------------arduino sensers--------------
+
+
 
 #-----------------MS5611-----------------
 sensorMS5611 = MS5611(1, 0x77, 432.8)
@@ -59,21 +69,34 @@ def read_temp():
 def write_to_db(data):	
 	conn = MySQLdb.connect(host= "localhost",
                   user="pi_user",
-                  passwd="***",
+                  passwd="pi_userP@$",
                   db="measure")
                   
 	x = conn.cursor()
 	try:
 	   q_insert = '\
 		INSERT INTO data \
-		(ms5611_temp, \
+		(\
+			mq7, \
+			mq135, \
+			mq3, \
+			mq8, \
+			ms5611_temp, \
 	     	ms5611_pressue, \
 	     	mhz19_co2, \
 	     	mhz19_temp, \
 	     	ds18b20_temp) \
 		VALUES \
-		(%.5f,%.5f,%.5f,%.5f,%.5f) \
-		' % (data['ms5611_temp'], data['ms5611_pressue'], data['mhz19_co2'], data['mhz19_temp'], data['ds18b20_temp'])
+		(%s,%s,%s,%s,%.5f,%.5f,%.5f,%.5f,%.5f) \
+		' % (data['mq7'], \
+		 data['mq135'], \
+		 data['mq3'], \
+		 data['mq8'], \
+		 data['ms5611_temp'], \
+		 data['ms5611_pressue'], \
+		 data['mhz19_co2'], \
+		 data['mhz19_temp'], \
+		 data['ds18b20_temp'])
 
        	   if verbose_mode:
 	   	print q_insert
@@ -100,7 +123,23 @@ while True:
     mhz19 = mh_z19.read_all()
     temp = read_temp()
     
+
+
+	 #--------arduino sensors-----------
+   
+    bytesToRead = ser.inWaiting()
+    ard_data_str = ser.read(bytesToRead)
+
+    ard_data_ar = ard_data_str.split('\r\n')
+    
+    mq_values = ard_data_ar[len(ard_data_ar)-1].split(' ')
+	 #--------arduino sensors-----------
+    
     obj = { \
+      'mq135': int(mq_values[0]), \
+      'mq7': int(mq_values[1]), \
+      'mq3': int(mq_values[2]), \
+      'mq8': int(mq_values[3]), \
 		'ms5611_temp': tempC, \
 		'ms5611_pressue': press, \
 		'mhz19_co2': mhz19['co2'], \
@@ -109,47 +148,6 @@ while True:
 	
     if verbose_mode:
 	    print "obj: ", obj
-
-    write_to_db(obj)
-
+    
+    write_to_db(obj) 	
     time.sleep(60)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

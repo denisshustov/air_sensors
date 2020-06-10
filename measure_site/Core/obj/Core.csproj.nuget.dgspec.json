@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "G:\\Projects\\measure\\air_sensors\\measure_site\\Core\\Core.csproj": {}
+    "/home/pi/measure/air_sensors/measure_site/Core/Core.csproj": {}
   },
   "projects": {
-    "G:\\Projects\\measure\\air_sensors\\measure_site\\Core\\Core.csproj": {
+    "/home/pi/measure/air_sensors/measure_site/Core/Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\Projects\\measure\\air_sensors\\measure_site\\Core\\Core.csproj",
+        "projectUniqueName": "/home/pi/measure/air_sensors/measure_site/Core/Core.csproj",
         "projectName": "Core",
-        "projectPath": "G:\\Projects\\measure\\air_sensors\\measure_site\\Core\\Core.csproj",
-        "packagesPath": "C:\\Users\\mnogo\\.nuget\\packages\\",
-        "outputPath": "G:\\Projects\\measure\\air_sensors\\measure_site\\Core\\obj\\",
+        "projectPath": "/home/pi/measure/air_sensors/measure_site/Core/Core.csproj",
+        "packagesPath": "/home/pi/.nuget/packages/",
+        "outputPath": "/home/pi/measure/air_sensors/measure_site/Core/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\mnogo\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/pi/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -59,7 +57,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/3.1.201/RuntimeIdentifierGraph.json"
         }
       }
     }
