@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace measure_site.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class DataController : Controller
     {
         private readonly ILogger<DataController> _logger;
@@ -24,19 +24,52 @@ namespace measure_site.Controllers
             _logger = logger;
         }
 
-        [HttpGet("/")]
+        [HttpGet("data")]
         public async Task<IEnumerable<Data>> GetAsync()
         {
             return await _context.Data.ToListAsync();
         }
 
-        [HttpGet("GetByDateAsync")]
+        [HttpGet("dataByDate")]
         public async Task<IEnumerable<Data>> GetByDateAsync(DateTime from, DateTime to)
         {
-            //from = new DateTime(from.Year, from.Month, from.Day);
             return await _context.Data
                 .Where(d => d.time_stamp > from && d.time_stamp < to)
+                //.Take(50)
                 .ToListAsync();
+        }
+
+        [HttpGet("insertTestData")]
+        public async Task<OkResult> InsertTestData(DateTime from, DateTime to)
+        {
+            var lst = new List<Data>();
+            var ds18b20_temp = 5M;
+            var ds18b20_temp_forward = true;
+            var r = new Random();
+            for (int i = 0; i < 1000; i++)
+            {
+                var d = new Data()
+                {
+                    time_stamp = DateTime.Now.AddMinutes(i),
+                    ds18b20_temp = ds18b20_temp,
+                    mhz19_co2 = ds18b20_temp * r.Next(1, 10),
+                    mhz19_temp = ds18b20_temp - r.Next(1, 5),
+                    ms5611_pressue = ds18b20_temp - r.Next(1, 55),
+                    ms5611_temp = ds18b20_temp - r.Next(1, 5)
+                };
+                if (ds18b20_temp_forward)
+                    ds18b20_temp += 0.5M;
+                else
+                    ds18b20_temp -= 0.5M;
+                if (ds18b20_temp > 30)
+                    ds18b20_temp_forward = false;
+                if (ds18b20_temp <= 5)
+                    ds18b20_temp_forward = true;
+                await _context.Data.AddAsync(d);
+            }
+            //await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }
