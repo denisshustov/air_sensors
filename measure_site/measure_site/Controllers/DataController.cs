@@ -30,12 +30,19 @@ namespace measure_site.Controllers
             return await _context.Data.ToListAsync();
         }
 
-        [HttpGet("dataByDate")]
-        public async Task<IEnumerable<Data>> GetByDateAsync(DateTime from, DateTime to)
+        [HttpGet("dataByDatePeriod")]
+        public async Task<IEnumerable<Data>> GetByDatePeriodAsync(DateTime from, DateTime to)
         {
             return await _context.Data
-                .Where(d => d.time_stamp > from && d.time_stamp < to)
-                //.Take(50)
+                .Where(d => d.time_stamp >= from && d.time_stamp <= to)
+                .ToListAsync();
+        }
+
+        [HttpGet("dataByDate")]
+        public async Task<IEnumerable<Data>> GetByDateAsync(DateTime date)
+        {
+            return await _context.Data
+                .Where(d => d.time_stamp >= date.Date && d.time_stamp <= date.Date.AddHours(24))
                 .ToListAsync();
         }
 
