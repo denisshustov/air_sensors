@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { IMyDpOptions, IMyDateModel } from 'mydatepicker';
+import { DateServiceService } from '../services/date.service';
 
 @Component({
   selector: 'app-nav-menu',
@@ -6,13 +8,17 @@ import { Component } from '@angular/core';
   styleUrls: ['./nav-menu.component.css']
 })
 export class NavMenuComponent {
-  isExpanded = false;
+  public currentPickerDate: any;
 
-  collapse() {
-    this.isExpanded = false;
+  myDatePickerOptions: IMyDpOptions = {
+    dateFormat: 'dd.mm.yyyy',
+  };
+  constructor(private dateService: DateServiceService) { }
+
+  onDateChanged(event: IMyDateModel) {
+    this.dateService.DateChangeEvent(event);
   }
-
-  toggle() {
-    this.isExpanded = !this.isExpanded;
+  ngOnInit() {
+    this.currentPickerDate = this.dateService.GetDate();
   }
 }

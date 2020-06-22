@@ -1,0 +1,82 @@
+<app-nav-menu></app-nav-menu>
+<div style=" padding-left: 10px; padding-right: 20px;">
+
+  <div class="row">
+    <div class="col" style="overflow-x: scroll;overflow-y:hidden;border: 3px solid black;">
+      <div style="text-align: center;position: fixed;">
+        <p>mhz19_co2</p>
+      </div>
+      <div style="width: 100%;">
+        <div class="canvasHolder">
+          <canvas baseChart
+                  [datasets]="mhz19_co2ChartData"
+                  [labels]="chartLabels"
+                  [options]="lineChartOptions"
+                  [colors]="lineChartColors"
+                  [legend]="lineChartLegend"
+                  [chartType]="lineChartType"
+                  [plugins]="lineChartPlugins">
+          </canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="overflow-x: scroll;overflow-y:hidden;border: 3px solid black;">
+      <div style="text-align: center;position: fixed;">
+        <p>ds18b20_temp</p>
+      </div>
+      <div style="width: 100%;">
+        <div class="canvasHolder">
+          <canvas baseChart
+                  [datasets]="ds18b20_tempChartData"
+                  [labels]="chartLabels"
+                  [options]="lineChartOptions"
+                  [colors]="lineChartColors"
+                  [legend]="lineChartLegend"
+                  [chartType]="lineChartType"
+                  [plugins]="lineChartPlugins">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col" style="overflow-x: scroll;overflow-y:hidden;border: 3px solid black;">
+      <div style="text-align: center;position: fixed;">
+        <p>ms5611_pressue</p>
+      </div>
+      <div style="width: 100%;">
+        <div class="canvasHolder">
+          <canvas baseChart
+                  [datasets]="ms5611_pressue_tempChartData"
+                  [labels]="chartLabels"
+                  [options]="lineChartOptions"
+                  [colors]="lineChartColors"
+                  [legend]="lineChartLegend"
+                  [chartType]="lineChartType"
+                  [plugins]="lineChartPlugins">
+          </canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="overflow-x: scroll;overflow-y:hidden;border: 3px solid black;">
+      <div style="text-align: center;position: fixed;">
+        <p>ms5611_temp</p>
+      </div>
+      <div style="width: 100%;">
+        <div class="canvasHolder">
+          <canvas baseChart
+                  [datasets]="ms5611_temp_tempChartData"
+                  [labels]="chartLabels"
+                  [options]="lineChartOptions"
+                  [colors]="lineChartColors"
+                  [legend]="lineChartLegend"
+                  [chartType]="lineChartType"
+                  [plugins]="lineChartPlugins">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

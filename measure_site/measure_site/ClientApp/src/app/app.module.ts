@@ -7,30 +7,30 @@ import { ChartsModule } from 'ng2-charts';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { MyDatePickerModule } from 'mydatepicker';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FirstScreenComponent } from './firstScreen/firstScreen.component';
+import { SecondScreenComponent } from './secondScreen/secondScreen.component';
+import { HourStaisticsComponent } from './hourStaistics/hourStaistics.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
-    HomeComponent,
-    CounterComponent,
-    FetchDataComponent
+    FirstScreenComponent,
+    SecondScreenComponent,
+    HourStaisticsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
-    HttpClientModule,
-    FormsModule,
+    HttpClientModule,    
     ChartsModule,
     MyDatePickerModule,
-
+    FormsModule, ReactiveFormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
+      { path: '', component: FirstScreenComponent, pathMatch: 'full' },
+      { path: 'secondScreen', component: SecondScreenComponent, pathMatch: 'full' },
+      { path: 'hourStaistics', component: HourStaisticsComponent, pathMatch: 'full' }
     ])
   ],
   providers: [],
