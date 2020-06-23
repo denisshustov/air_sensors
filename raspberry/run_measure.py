@@ -13,6 +13,10 @@ import os
 import glob 
 #https://www.circuitbasics.com/raspberry-pi-ds18b20-temperature-sensor-tutorial/
 
+#sudo pip install Adafruit_DHT
+#https://pimylifeup.com/raspberry-pi-humidity-sensor-dht22/
+import Adafruit_DHT
+
 
 import MySQLdb
 
@@ -85,9 +89,11 @@ def write_to_db(data):
 	     	ms5611_pressue, \
 	     	mhz19_co2, \
 	     	mhz19_temp, \
-	     	ds18b20_temp) \
+	     	ds18b20_temp, \
+	     	am2302_humid, \
+	     	am2302_temp) \
 		VALUES \
-		(%s,%s,%s,%s,%.5f,%.5f,%.5f,%.5f,%.5f) \
+		(%s,%s,%s,%s,%.5f,%.5f,%.5f,%.5f,%.5f,%.5f,%.5f) \
 		' % (data['mq7'], \
 		 data['mq135'], \
 		 data['mq3'], \
@@ -96,7 +102,9 @@ def write_to_db(data):
 		 data['ms5611_pressue'], \
 		 data['mhz19_co2'], \
 		 data['mhz19_temp'], \
-		 data['ds18b20_temp'])
+		 data['ds18b20_temp'], \
+		 data['am2302_humid'], \
+		 data['am2302_temp'])
 
        	   if verbose_mode:
 	   	print q_insert
@@ -115,6 +123,10 @@ def write_to_db(data):
 	
 mh_z19.abc_on()
 
+DHT_SENSOR = Adafruit_DHT.DHT22
+DHT_PIN = 21
+
+
 while True:
     sensorMS5611.read()
     tempC = sensorMS5611.getTempC()
@@ -124,8 +136,9 @@ while True:
     temp = read_temp()
     
 
-
-	 #--------arduino sensors-----------
+    #--------humid----------
+    am2302_humid, am2302_temp = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
+    #--------arduino sensors-----------
    
     bytesToRead = ser.inWaiting()
     ard_data_str = ser.read(bytesToRead)
@@ -144,10 +157,12 @@ while True:
 		'ms5611_pressue': press, \
 		'mhz19_co2': mhz19['co2'], \
 		'mhz19_temp': mhz19['temperature'], \
-		'ds18b20_temp': temp }
+		'ds18b20_temp': temp,
+		'am2302_humid':am2302_humid,
+		'am2302_temp':am2302_temp }
 	
     if verbose_mode:
 	    print "obj: ", obj
     
     write_to_db(obj) 	
-    time.sleep(60)
+    time.sleep(6)

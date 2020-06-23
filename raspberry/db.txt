@@ -11,6 +11,7 @@ FLUSH PRIVILEGES;
 sudo mysql -u pi_user -p measure
 
 pip install MySQL-python
+DROP TABLE data;
 
 CREATE TABLE data (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -23,7 +24,10 @@ CREATE TABLE data (
     ms5611_pressue DECIMAL(18,9) NULL, 
     mhz19_co2 DECIMAL(18,9) NULL,
     mhz19_temp DECIMAL(18,9) NULL,
-    ds18b20_temp DECIMAL(18,9) NULL);
+    ds18b20_temp DECIMAL(18,9) NULL,
+    am2302_temp DECIMAL(18,9) NULL,
+    am2302_humid DECIMAL(18,9) NULL
+    );
 
  """
         INSERT INTO data
