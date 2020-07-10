@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core;
 using Core.Context;
+using measure_site.Entities;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -38,11 +40,21 @@ namespace measure_site.Controllers
                 .ToListAsync();
         }
 
-        [HttpGet("dataByDate")]
-        public async Task<IEnumerable<Data>> GetByDateAsync(DateTime date)
+        [HttpPost("dataByDate")]
+        public async Task<IEnumerable<Data>> GetByDateAsync(GetByDateRequest request)
         {
+            var date = new DateTime(request.Year, request.Month, request.Day);
             return await _context.Data
                 .Where(d => d.time_stamp >= date.Date && d.time_stamp <= date.Date.AddHours(24))
+                .ToListAsync();
+        }
+        
+        [HttpGet("dataByLastHour")]
+        public async Task<IEnumerable<Data>> GetDataByLastHour()
+        {
+            var date = DateTime.Now;
+            return await _context.Data
+                .Where(d => d.time_stamp >= date.Date && d.time_stamp <= date.Date.AddHours(1))
                 .ToListAsync();
         }
 
