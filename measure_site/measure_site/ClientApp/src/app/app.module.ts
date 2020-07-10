@@ -30,6 +30,7 @@ import { HourStaisticsComponent } from './hourStaistics/hourStaistics.component'
     RouterModule.forRoot([
       { path: '', component: FirstScreenComponent, pathMatch: 'full' },
       { path: 'secondScreen', component: SecondScreenComponent, pathMatch: 'full' },
+      { path: 'firsScreen', component: FirstScreenComponent, pathMatch: 'full' },
       { path: 'hourStaistics', component: HourStaisticsComponent, pathMatch: 'full' }
     ])
   ],

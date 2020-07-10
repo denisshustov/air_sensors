@@ -53,13 +53,7 @@ export class HourStaisticsComponent {
  
 
   LoadData(d) {
-    this.http.post('https://localhost:5001/api/data/dataByDate',
-      {
-        Year: d.date.year,
-        Month: d.date.month,
-        Day: d.date.day
-      }
-    ).subscribe(data => {
+    this.http.get('https://localhost:5001/api/data/dataByLastHour').subscribe(data => {
 
       this.chartLabels = _.take(
         _.drop(
