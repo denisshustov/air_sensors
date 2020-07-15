@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data;
-using System.Net.Sockets;
 
 namespace Core
 {
@@ -13,5 +11,14 @@ namespace Core
         public decimal mhz19_co2 { get; set; }
         public decimal mhz19_temp { get; set; }
         public decimal ds18b20_temp { get; set; }
+        
+
+        public int mq7 { get; set; }
+        public int mq135 { get; set; }
+        public int mq3 { get; set; }
+        public int mq8 { get; set; }
+        
+        public decimal am2302_humid { get; set; }
+        public decimal am2302_temp { get; set; }
     }
 }
