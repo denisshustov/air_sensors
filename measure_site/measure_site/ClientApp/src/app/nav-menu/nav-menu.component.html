@@ -1,14 +1,27 @@
 
 <div class="row">
-  <div class="col"></div>
-  <div class="col-2">
+  <div class="col" *ngIf="router.url!='/hourStaistics'"><div (click)="gotoDate(-1)" style="text-align: right;">назад</div></div>
+  <div class="col-2" *ngIf="router.url!='/hourStaistics'">
     <form #myForm="ngForm" novalidate>
-      <my-date-picker name="mydate" [options]="myDatePickerOptions"
-                      [(ngModel)]="currentPickerDate" (dateChanged)="onDateChanged($event)"></my-date-picker>
+      <input class="input-box" placeholder="Click to select a date"
+             angular-mydatepicker name="mydate" (click)="dp.toggleCalendar()"
+             [(ngModel)]="currentPickerDate" [options]="myDatePickerOptions"
+             #dp="angular-mydatepicker" (dateChanged)="onDateChanged($event)" />
     </form>
   </div>
-  <div class="col-5"></div>
-  <div class="col"><a routerLink="/hourStaistics">За час</a></div>
-  <div class="col"><a routerLink="/firsScreen">Первый экран</a></div>
-  <div class="col"><a routerLink="/secondScreen">Второй экран</a></div>
+  <div class="col" *ngIf="router.url!='/hourStaistics'"><div (click)="gotoDate(1)">вперёд</div></div>
+  <div class="col-4" *ngIf="router.url=='/hourStaistics'">{{currentPickerDate.singleDate.jsDate | date: 'dd/MM/yyyy'}}</div>
+  <div class="col-4"></div>
+  <div class="col">
+    <a routerLink="/hourStaistics" *ngIf="router.url!='/hourStaistics'">За час</a>
+    <span *ngIf="router.url=='/hourStaistics'">За час</span>
+  </div>
+  <div class="col">
+    <a *ngIf="router.url!='/firsScreen'" routerLink="/firsScreen">Первый экран</a>
+    <span *ngIf="router.url=='/firsScreen'">Первый экран</span>
+  </div>
+  <div class="col">
+    <a *ngIf="router.url!='/secondScreen'" routerLink="/secondScreen">Второй экран</a>
+    <span *ngIf="router.url=='/secondScreen'">Второй экран</span>
+  </div>
 </div>

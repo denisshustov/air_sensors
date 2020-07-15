@@ -15,6 +15,7 @@ declare var _: any;
 export class FirstScreenComponent {
 
   constructor(private http: HttpClient, private dateService: DateServiceService) { }
+  intervalHandler: any;
 
   mhz19_co2ChartData: ChartDataSets[] = [
     { data: [], label: '' },
@@ -25,7 +26,7 @@ export class FirstScreenComponent {
   ms5611_pressue_tempChartData: ChartDataSets[] = [
     { data: [], label: '' },
   ];
-  ms5611_temp_tempChartData: ChartDataSets[] = [
+  am2302_humidChartData: ChartDataSets[] = [
     { data: [], label: '' },
   ];
 
@@ -55,9 +56,7 @@ export class FirstScreenComponent {
   LoadData(d) {
     this.http.post('https://localhost:5001/api/data/dataByDate',
       {
-        Year: d.date.year,
-        Month: d.date.month,
-        Day: d.date.day
+        Date:d
       }
     ).subscribe(data => {
 
@@ -68,16 +67,32 @@ export class FirstScreenComponent {
         , this.step);
 
       this.mhz19_co2ChartData = [
-        { data: _.take(_.map(data, (x) => x.mhz19_co2), this.step), label: 'mhz19_co2' },
+        {
+          data: _.take(_.map(data, (x) => x.mhz19_co2), this.step),
+          label: 'mhz19_co2',
+          pointRadius: 0
+        },
       ];
       this.ds18b20_tempChartData = [
-        { data: _.take(_.map(data, (x) => x.ds18b20_temp), this.step), label: 'ds18b20_temp' },
+        {
+          data: _.take(_.map(data, (x) => x.ds18b20_temp), this.step),
+          label: 'ds18b20_temp',
+          pointRadius: 0
+        },
       ];
       this.ms5611_pressue_tempChartData = [
-        { data: _.take(_.map(data, (x) => x.ms5611_pressue), this.step), label: 'ms5611_pressue' },
+        {
+          data: _.take(_.map(data, (x) => x.ms5611_pressue), this.step),
+          label: 'ms5611_pressue',
+          pointRadius: 0
+        },
       ];
-      this.ms5611_temp_tempChartData = [
-        { data: _.take(_.map(data, (x) => x.ms5611_temp), this.step), label: 'ms5611_temp' },
+      this.am2302_humidChartData = [
+        {
+          data: _.take(_.map(data, (x) => x.am2302_humid), this.step),
+          label: 'am2302_humid',
+          pointRadius: 0
+        },
       ];
     });
   }
@@ -86,6 +101,16 @@ export class FirstScreenComponent {
     //1009x685
     this.dateService.DateChangeEmitter().subscribe(date => this.LoadData(date));
     this.LoadData(this.dateService.GetDate());
+
+    this.intervalHandler = setInterval(() => {
+      this.LoadData(this.dateService.GetDate());
+    }, 60000 * 10);
+  }
+
+  ngOnDestroy() {
+    if (this.intervalHandler) {
+      clearInterval(this.intervalHandler);
+    }
   }
 
 

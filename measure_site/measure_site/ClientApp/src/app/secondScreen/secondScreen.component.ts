@@ -16,16 +16,20 @@ export class SecondScreenComponent {
 
   constructor(private http: HttpClient, private dateService: DateServiceService) { }
 
-  mhz19_co2ChartData: ChartDataSets[] = [
-    { data: [], label: '' },
-  ];
-  ds18b20_tempChartData: ChartDataSets[] = [
-    { data: [], label: '' },
-  ];
-  ms5611_pressue_tempChartData: ChartDataSets[] = [
+  intervalHandler: any;
+  mq8ChartData: ChartDataSets[] = [
     { data: [], label: '' },
   ];
   ms5611_temp_tempChartData: ChartDataSets[] = [
+    { data: [], label: '' },
+  ];
+  mq7ChartData: ChartDataSets[] = [
+    { data: [], label: '' },
+  ];
+  mq135ChartData: ChartDataSets[] = [
+    { data: [], label: '' },
+  ];
+  mq3ChartData: ChartDataSets[] = [
     { data: [], label: '' },
   ];
 
@@ -47,17 +51,15 @@ export class SecondScreenComponent {
   lineChartLegend = true;
   lineChartPlugins = [];
   lineChartType = 'line';
-  step = 1440;
+  step = 144000;
   currentPage = 1;
 
- 
+
 
   LoadData(d) {
     this.http.post('https://localhost:5001/api/data/dataByDate',
       {
-        Year: d.date.year,
-        Month: d.date.month,
-        Day: d.date.day
+        Date: d
       }
     ).subscribe(data => {
 
@@ -67,17 +69,33 @@ export class SecondScreenComponent {
           (this.step * this.currentPage) - this.step)
         , this.step);
 
-      this.mhz19_co2ChartData = [
-        { data: _.take(_.map(data, (x) => x.mhz19_co2), this.step), label: 'mhz19_co2' },
+      this.mq8ChartData = [
+        {
+          data: _.take(_.map(data, (x) => x.mq8), this.step),
+          label: 'mq8',
+          pointRadius: 0
+        },
       ];
-      this.ds18b20_tempChartData = [
-        { data: _.take(_.map(data, (x) => x.ds18b20_temp), this.step), label: 'ds18b20_temp' },
+      this.mq7ChartData = [
+        {
+          data: _.take(_.map(data, (x) => x.mq7), this.step),
+          label: 'mq7',
+          pointRadius: 0
+        },
       ];
-      this.ms5611_pressue_tempChartData = [
-        { data: _.take(_.map(data, (x) => x.ms5611_pressue), this.step), label: 'ms5611_pressue' },
+      this.mq135ChartData = [
+        {
+          data: _.take(_.map(data, (x) => x.mq135), this.step),
+          label: 'mq135',
+          pointRadius: 0
+        },
       ];
-      this.ms5611_temp_tempChartData = [
-        { data: _.take(_.map(data, (x) => x.ms5611_temp), this.step), label: 'ms5611_temp' },
+      this.mq3ChartData = [
+        {
+          data: _.take(_.map(data, (x) => x.mq3), this.step),
+          label: 'mq3',
+          pointRadius: 0
+        },
       ];
     });
   }
@@ -86,7 +104,15 @@ export class SecondScreenComponent {
     //1009x685
     this.dateService.DateChangeEmitter().subscribe(date => this.LoadData(date));
     this.LoadData(this.dateService.GetDate());
+
+    this.intervalHandler = setInterval(() => {
+      this.LoadData(this.dateService.GetDate());
+    }, 60000 * 10);
   }
 
-
+  ngOnDestroy() {
+    if (this.intervalHandler) {
+      clearInterval(this.intervalHandler);
+    }
+  }
 }

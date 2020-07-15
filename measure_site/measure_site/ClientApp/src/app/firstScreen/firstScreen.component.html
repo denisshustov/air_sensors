@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col" style="overflow-x: scroll;overflow-y:hidden;border: 3px solid black;">
       <div style="text-align: center;position: fixed;">
-        <p>mhz19_co2</p>
+        <p>CO2 углекислый газ</p>
       </div>
       <div style="width: 100%;">
         <div class="canvasHolder">
@@ -22,7 +22,7 @@
     </div>
     <div class="col" style="overflow-x: scroll;overflow-y:hidden;border: 3px solid black;">
       <div style="text-align: center;position: fixed;">
-        <p>ds18b20_temp</p>
+        <p>Температура</p>
       </div>
       <div style="width: 100%;">
         <div class="canvasHolder">
@@ -42,7 +42,7 @@
   <div class="row">
     <div class="col" style="overflow-x: scroll;overflow-y:hidden;border: 3px solid black;">
       <div style="text-align: center;position: fixed;">
-        <p>ms5611_pressue</p>
+        <p>Давление</p>
       </div>
       <div style="width: 100%;">
         <div class="canvasHolder">
@@ -60,12 +60,12 @@
     </div>
     <div class="col" style="overflow-x: scroll;overflow-y:hidden;border: 3px solid black;">
       <div style="text-align: center;position: fixed;">
-        <p>ms5611_temp</p>
+        <p>Влажность</p>
       </div>
       <div style="width: 100%;">
         <div class="canvasHolder">
           <canvas baseChart
-                  [datasets]="ms5611_temp_tempChartData"
+                  [datasets]="am2302_humidChartData"
                   [labels]="chartLabels"
                   [options]="lineChartOptions"
                   [colors]="lineChartColors"

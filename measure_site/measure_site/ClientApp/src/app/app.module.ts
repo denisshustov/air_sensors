@@ -7,7 +7,7 @@ import { ChartsModule } from 'ng2-charts';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { MyDatePickerModule } from 'mydatepicker';
+import { AngularMyDatePickerModule } from 'angular-mydatepicker';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FirstScreenComponent } from './firstScreen/firstScreen.component';
 import { SecondScreenComponent } from './secondScreen/secondScreen.component';
@@ -25,7 +25,7 @@ import { HourStaisticsComponent } from './hourStaistics/hourStaistics.component'
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,    
     ChartsModule,
-    MyDatePickerModule,
+    AngularMyDatePickerModule,
     FormsModule, ReactiveFormsModule,
     RouterModule.forRoot([
       { path: '', component: FirstScreenComponent, pathMatch: 'full' },

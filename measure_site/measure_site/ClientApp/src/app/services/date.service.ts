@@ -1,34 +1,44 @@
 import { Injectable, EventEmitter } from "@angular/core";
 import * as _ from "lodash";
 import * as moment from 'moment';
+import { IMyDateModel, IMySingleDateModel } from "angular-mydatepicker";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DateServiceService {
 
-  public currentPickerDate: any = { date: { year: 2020, month: 5, day: 16 } };
+  public currentPickerDate: IMyDateModel;
 
-  dateChanged: EventEmitter<any> = new EventEmitter();
+  private ToUTC(date) {
+    var now_utc = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
+      date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
+    return new Date(now_utc);
+  }
 
-  public DateChangeEvent(obj) {
-    this.SetDate(obj);
-    this.dateChanged.emit(obj);
+  constructor() {
+    var date = new Date();
+    this.currentPickerDate = { isRange: false, singleDate: { jsDate: this.ToUTC(date) } };
+  }
+
+  dateChanged: EventEmitter<Date> = new EventEmitter();
+
+  public DateChangeEvent(date: Date) {
+    date = this.ToUTC(date);
+    this.SetDate(date);
+    this.dateChanged.emit(date);
   }
   public DateChangeEmitter() {
     return this.dateChanged;
   }
 
-  constructor() {
-
+  public GetDate(): Date {
+    return this.currentPickerDate.singleDate.jsDate;
   }
-
-  public GetDate() {
+  public GetFullDate(): IMyDateModel {
     return this.currentPickerDate;
   }
-  public SetDate(value) {
-    this.currentPickerDate.date.year = value.date.year;
-    this.currentPickerDate.date.month = value.date.month;
-    this.currentPickerDate.date.day = value.date.day;
+  public SetDate(value: Date) {
+    this.currentPickerDate.singleDate.jsDate = value;
   }
 }
