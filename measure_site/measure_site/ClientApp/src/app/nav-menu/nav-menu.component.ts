@@ -15,7 +15,7 @@ export class NavMenuComponent {
     dateFormat: 'dd.mm.yyyy',
     dateRange: false
   };
-  constructor(private dateService: DateServiceService, private router: Router) {
+  constructor(private dateService: DateServiceService, public router: Router) {
     //router.events.subscribe((url: any) => console.log(url));
     //console.log(router.url);  // to print only path eg:"/login"
   }
